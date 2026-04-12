@@ -6,6 +6,170 @@
   <title>Servicios | Sleygrowth</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* ── PORTFOLIO CARDS (same as index) ── */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+    @media(max-width:900px){.portfolio-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:560px){.portfolio-grid{grid-template-columns:1fr;}}
+
+    .proj-card {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      display: block;
+      text-decoration: none;
+      transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .25s ease;
+      cursor: pointer;
+    }
+    .proj-card:hover, .proj-card:focus-visible {
+      transform: translateY(-7px) scale(1.015);
+      box-shadow: 0 28px 64px rgba(0,0,0,.6), 0 0 0 1px var(--neon);
+      border-color: var(--neon);
+    }
+
+    .proj-preview {
+      position: relative;
+      width: 100%;
+      padding-bottom: 60%;
+      overflow: hidden;
+      background: #0a0a14;
+    }
+    .proj-preview iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 250%; height: 250%;
+      transform: scale(0.4);
+      transform-origin: top left;
+      border: none;
+      pointer-events: none;
+    }
+
+    .proj-card.is-github .proj-preview {
+      padding-bottom: 0;
+      height: 190px;
+      background: linear-gradient(135deg,#0d1117,#161b22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gh-inner { display:flex;flex-direction:column;align-items:center;gap:14px; }
+    .gh-inner i { font-size:60px;color:#58a6ff;opacity:.8; }
+    .gh-inner span { font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:#58a6ff;opacity:.55;font-family:var(--font-mono,monospace); }
+
+    .proj-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,transparent 25%,rgba(5,5,18,.93) 100%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 14px;
+      opacity: 0;
+      transition: opacity .28s ease;
+    }
+    .proj-card:hover .proj-overlay,
+    .proj-card:focus-visible .proj-overlay { opacity: 1; }
+    .proj-card.is-github .proj-overlay { opacity: 1; }
+
+    .proj-visit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--neon);
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 9px 16px;
+      border-radius: 6px;
+      font-family: var(--font-display, sans-serif);
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .proj-visit-btn:hover { background: #5a1fd6; }
+
+    .proj-num {
+      position: absolute;
+      top: 12px; left: 12px;
+      font-family: var(--font-mono,monospace);
+      font-size: .62rem;
+      color: var(--neon);
+      background: rgba(5,5,18,.75);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(123,47,255,.3);
+      padding: 3px 10px;
+      border-radius: 20px;
+      z-index: 2;
+    }
+
+    .proj-info {
+      padding: 18px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .proj-cat { font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--neon);font-family:var(--font-mono,monospace); }
+    .proj-name { font-family:var(--font-display,sans-serif);font-size:1.1rem;font-weight:700;color:var(--text);margin:0;line-height:1.2; }
+    .proj-desc { font-size:.76rem;color:var(--muted);line-height:1.65;margin:3px 0 0; }
+    .proj-tags { display:flex;flex-wrap:wrap;gap:5px;margin-top:10px; }
+    .proj-tag {
+      font-size:.6rem;letter-spacing:.8px;text-transform:uppercase;
+      padding:3px 8px;border-radius:4px;
+      background:rgba(123,47,255,.1);
+      border:1px solid rgba(123,47,255,.25);
+      color:var(--neon);
+      font-family:var(--font-mono,monospace);
+    }
+
+    .proj-card.featured { grid-column: span 2; }
+    .proj-card.featured .proj-preview { padding-bottom: 42%; }
+    @media(max-width:900px){
+      .proj-card.featured { grid-column: span 1; }
+      .proj-card.featured .proj-preview { padding-bottom: 60%; }
+    }
+
+    /* ── SERVICIOS: estilos base para sg-service-card ── */
+    .sg-service-card {
+      position: relative;
+      padding: 36px;
+      border-radius: 10px;
+      background: var(--panel, #111120);
+      border: 1px solid var(--border, #2a2a3a);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .sg-service-card:hover {
+      border-color: var(--neon, #7b2fff);
+      box-shadow: 0 0 32px rgba(123,47,255,0.12);
+    }
+    .sg-service-num {
+      font-family: var(--font-display, sans-serif);
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: rgba(123,47,255,0.08);
+      position: absolute;
+      top: 16px;
+      right: 24px;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* ── FIX REVEAL: forzar visibilidad si script.js no lo activa ── */
+    .sg-section .reveal,
+    .sg-section-dark .reveal,
+    .sg-service-card.reveal {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+      visibility: visible !important;
+    }
+  </style>
 </head>
 <body>
 
@@ -152,6 +316,143 @@
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PROYECTOS REALES (NUEVO) -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="sg-section" id="proyectos" style="border-top:1px solid var(--border);">
+  <div class="container">
+    <div style="text-align:center; margin-bottom:56px;" class="reveal">
+      <span class="sg-badge">En acción</span>
+      <h2 class="sg-title" style="margin:20px 0 16px;">Lo que <span class="solid">ya construimos</span></h2>
+      <div class="sg-rule sg-rule-center"></div>
+      <p class="sg-subtitle sg-subtitle-center">Pasá el cursor encima para ver cada proyecto en vivo. Hacé clic para visitarlo.</p>
+    </div>
+
+    <div class="portfolio-grid">
+
+      <!-- 1 Studio Nails (featured) -->
+      <a href="https://fastidious-axolotl-12bda4.netlify.app/" target="_blank" rel="noopener" class="proj-card featured reveal" style="transition-delay:0s">
+        <span class="proj-num">01</span>
+        <div class="proj-preview">
+          <iframe src="https://fastidious-axolotl-12bda4.netlify.app/" loading="lazy" title="Studio Nails" sandbox="allow-scripts allow-same-origin"></iframe>
+          <div class="proj-overlay">
+            <span class="proj-visit-btn"><i class="fas fa-external-link-alt"></i> Ver sitio</span>
+          </div>
+        </div>
+        <div class="proj-info">
+          <span class="proj-cat">Diseño Web · Belleza</span>
+          <h3 class="proj-name">Studio Nails</h3>
+          <p class="proj-desc">Landing de alta conversión para estudio de uñas. Agendamiento online, galería y CTAs optimizados.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">#web</span><span class="proj-tag">#booking</span><span class="proj-tag">#beauty</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 2 Barber Club -->
+      <a href="https://glowing-torrone-d9dd82.netlify.app/" target="_blank" rel="noopener" class="proj-card reveal" style="transition-delay:0.05s">
+        <span class="proj-num">02</span>
+        <div class="proj-preview">
+          <iframe src="https://glowing-torrone-d9dd82.netlify.app/" loading="lazy" title="Barber Club" sandbox="allow-scripts allow-same-origin"></iframe>
+          <div class="proj-overlay">
+            <span class="proj-visit-btn"><i class="fas fa-external-link-alt"></i> Ver sitio</span>
+          </div>
+        </div>
+        <div class="proj-info">
+          <span class="proj-cat">Diseño Web · Barbería</span>
+          <h3 class="proj-name">Barber Club</h3>
+          <p class="proj-desc">Web premium para barbería. Reservas, servicios y galería con estética masculina moderna.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">#web</span><span class="proj-tag">#barbería</span><span class="proj-tag">#premium</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 3 Psicólogo -->
+      <a href="https://velvety-shortbread-3b3cd8.netlify.app/" target="_blank" rel="noopener" class="proj-card reveal" style="transition-delay:0.1s">
+        <span class="proj-num">03</span>
+        <div class="proj-preview">
+          <iframe src="https://velvety-shortbread-3b3cd8.netlify.app/" loading="lazy" title="Psicólogo Web" sandbox="allow-scripts allow-same-origin"></iframe>
+          <div class="proj-overlay">
+            <span class="proj-visit-btn"><i class="fas fa-external-link-alt"></i> Ver sitio</span>
+          </div>
+        </div>
+        <div class="proj-info">
+          <span class="proj-cat">Diseño Web · Salud Mental</span>
+          <h3 class="proj-name">Psicólogo Online</h3>
+          <p class="proj-desc">Presencia digital profesional para psicólogo. Formulario de consulta, confianza visual y SEO local.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">#web</span><span class="proj-tag">#salud</span><span class="proj-tag">#seo</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 4 Floristería -->
+      <a href="https://symphonious-valkyrie-a2db98.netlify.app/" target="_blank" rel="noopener" class="proj-card reveal" style="transition-delay:0.15s">
+        <span class="proj-num">04</span>
+        <div class="proj-preview">
+          <iframe src="https://symphonious-valkyrie-a2db98.netlify.app/" loading="lazy" title="Floristería Web" sandbox="allow-scripts allow-same-origin"></iframe>
+          <div class="proj-overlay">
+            <span class="proj-visit-btn"><i class="fas fa-external-link-alt"></i> Ver sitio</span>
+          </div>
+        </div>
+        <div class="proj-info">
+          <span class="proj-cat">Diseño Web · Comercio</span>
+          <h3 class="proj-name">Floristería</h3>
+          <p class="proj-desc">Catálogo floral con WhatsApp directo y diseño elegante orientado a ventas y conversión.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">#web</span><span class="proj-tag">#ecommerce</span><span class="proj-tag">#florería</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 5 Clínica Dental -->
+      <a href="https://clinica-dental-goodsmile.vercel.app/" target="_blank" rel="noopener" class="proj-card reveal" style="transition-delay:0.2s">
+        <span class="proj-num">05</span>
+        <div class="proj-preview">
+          <iframe src="https://clinica-dental-goodsmile.vercel.app/" loading="lazy" title="Clínica Dental GoodSmile" sandbox="allow-scripts allow-same-origin"></iframe>
+          <div class="proj-overlay">
+            <span class="proj-visit-btn"><i class="fas fa-external-link-alt"></i> Ver sitio</span>
+          </div>
+        </div>
+        <div class="proj-info">
+          <span class="proj-cat">Diseño Web · Odontología</span>
+          <h3 class="proj-name">Clínica Dental GoodSmile</h3>
+          <p class="proj-desc">Web profesional para clínica dental. Servicios, equipo médico, agendamiento y credibilidad clínica.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">#web</span><span class="proj-tag">#dental</span><span class="proj-tag">#salud</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 6 Veterinaria - GitHub -->
+      <a href="https://veterinaria-mpatitas.vercel.app/" target="_blank" rel="noopener" class="proj-card reveal" style="transition-delay:0.25s">
+        <span class="proj-num">06</span>
+        <div class="proj-preview">
+          <iframe src="https://veterinaria-mpatitas.vercel.app/" loading="lazy" title="Clínica Veterinaria Mpatitas" sandbox="allow-scripts allow-same-origin"></iframe>
+          <div class="proj-overlay">
+            <span class="proj-visit-btn"><i class="fas fa-external-link-alt"></i> Ver sitio</span>
+          </div>
+        </div>
+        <div class="proj-info">
+          <span class="proj-cat">Software · Clínica Veterinaria</span>
+          <h3 class="proj-name">Sistema Veterinaria</h3>
+          <p class="proj-desc">Sistema de gestión para clínica veterinaria: pacientes, citas, historial médico y automatización interna.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">#software</span><span class="proj-tag">#crm</span><span class="proj-tag">#veterinaria</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <div style="text-align:center;margin-top:48px;" class="reveal">
+      <a href="portafolio.html" class="btn-ghost">Ver portafolio completo <i class="fas fa-arrow-right" style="margin-left:8px;"></i></a>
+    </div>
+  </div>
+</section>
+<!-- ═══════════════════════════════════════════════════ -->
+
 <!-- CTA -->
 <section class="sg-cta-section">
   <div class="container" style="position:relative;z-index:1;">
@@ -189,7 +490,7 @@
       <div>
         <h4>Contacto Directo</h4>
         <ul class="sg-footer-contact">
-          <li style="margin-bottom:12px;"><i class="fas fa-envelope" style="color:var(--v);margin-right:8px;"></i><a href="mailto:sleygrowth@gmail.com">sleygrowth@gmail.com</a></li>
+          <li style="margin-bottom:12px;"><i class="fas fa-envelope" style="color:var(--v);margin-right:8px;"></i><a href="/cdn-cgi/l/email-protection#1b68777e627c69746c6f735b7c767a727735787476"><span class="__cf_email__" data-cfemail="d1a2bdb4a8b6a3bea6a5b991b6bcb0b8bdffb2bebc">[email&#160;protected]</span></a></li>
           <li style="margin-bottom:12px;"><i class="fab fa-whatsapp" style="color:var(--green);margin-right:8px;"></i><a href="https://wa.me/50664442855">+506 6444-2855</a></li>
           <li style="color:var(--muted);font-size:0.8rem;"><i class="fas fa-clock" style="color:var(--v);margin-right:8px;"></i>Lun–Sáb · 9am–6pm</li>
         </ul>
@@ -211,8 +512,4 @@
 </footer>
 
 <a href="https://wa.me/50664442855?text=Hola%20Sleygrowth..." class="wa-float" target="_blank"><i class="fab fa-whatsapp"></i> Escríbenos</a>
-<a href="index.html" class="home-float"><i class="fas fa-home"></i> SLEY<span>GROWTH</span></a>
-
-<script src="script.js"></script>
-</body>
-</html>
+<a href="i
